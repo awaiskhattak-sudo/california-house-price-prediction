@@ -1,0 +1,35 @@
+California House Price Prediction 🏠
+
+An end-to-end Machine Learning regression project that predicts median house prices in California districts based on location, population, income, and housing features.
+
+Problem Statement
+
+Given district-level data (location, rooms, population, income, ocean proximity, etc.), predict the median house value — a continuous number in dollars. This is a regression problem (unlike Titanic which was classification).
+
+Dataset
+Source: California Housing dataset (20,640 districts, from the 1990 census)
+Target column: median_house_value
+Features: longitude, latitude, housing age, rooms, bedrooms, population, households, median income, ocean proximity
+Approach
+EDA — Looked at price distribution, relationship between income and price, and price differences by ocean proximity (see eda_overview.png). Also built a correlation heatmap (correlation_heatmap.png) to see which numeric features relate most to price.
+Data Cleaning
+total_bedrooms had 207 missing values → filled with median
+Feature Engineering (this mattered a lot for this dataset)
+rooms_per_household = total_rooms / households (raw totals aren't meaningful on their own — a bigger house naturally has bigger totals)
+bedrooms_per_room = total_bedrooms / total_rooms (ratio of house layout)
+population_per_household = population / households (density indicator)
+One-hot encoded ocean_proximity (categorical: NEAR BAY, INLAND, etc.)
+Modeling
+Baseline: Linear Regression (with feature scaling)
+Improved: Random Forest Regressor, tuned with GridSearchCV
+Evaluation
+Metrics used: MAE (Mean Absolute Error), RMSE (Root Mean Squared Error), R²
+Regression uses different metrics than classification because we're predicting a number, not a category — there's no "accuracy," instead we measure how far off our predictions are from actual prices.
+Results
+Model	MAE	RMSE	R² Score
+Linear Regression	$50,889	$72,669	0.597
+Random Forest (tuned)	$32,373	$50,441	0.806
+
+R² of 0.806 means the model explains about 80.6% of the variation in house prices — a strong result for this dataset. MAE of ~$32k means on average, predictions are off by about $32,000 from the actual price.
+
+Top predictive features: median_income, ocean_proximity_INLAND, population_per_household — confirming that income level and location (inland vs coastal) drive California housing prices the most.
